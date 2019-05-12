@@ -11,12 +11,6 @@ set nocompatible
 " Set to auto read when a file is changed from the outside
 set autoread 
 
-" Always set autoindenting on
-set autoindent
-
-" Copy the previous indentation on autoindenting
-set copyindent
-
 " Ignore case when searching
 set ignorecase
 
