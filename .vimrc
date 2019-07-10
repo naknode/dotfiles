@@ -23,9 +23,7 @@ set timeout timeoutlen=200 ttimeoutlen=100
 " Mouse mode in vim
 set mouse=a
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" >>> Plugins
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugin installation file
 so ~/.vim/plugins.vim
 
 
@@ -76,6 +74,7 @@ set backspace=indent,eol,start
 
 " Highlight current line
 set cursorline
+hi CursorLine term=none cterm=none ctermbg=3
 
 " Highlight matching brackets
 set showmatch
@@ -85,6 +84,8 @@ autocmd Filetype blade setlocal ts=4 sw=4 expandtab
 autocmd Filetype php setlocal ts=4 sw=4 expandtab
 autocmd Filetype cs setlocal ts=4 sw=4 expandtab
 
+" Highlight flicker word under cursor
+highlight flicker cterm=bold ctermfg=white
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " >>> Colors and Fonts
@@ -135,7 +136,9 @@ set ffs=unix,dos,mac
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " Turn backup off, since most stuff is in SVN, git et.c anyway...
-set nobackup
+set backup
+set backupdir=~/.vim/backup
+set directory=~/.vim/tmp
 set nowb
 set noswapfile
 
@@ -205,14 +208,6 @@ map <leader>te :tabedit <c-r>=expand("%:p:h")<cr>/
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 
 
-""""""""""""""""""""""""""""""
-" >>> Status line
-""""""""""""""""""""""""""""""
-
-" Always show the statusline
-set laststatus=2
-
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " >>> Persistent undo
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -252,10 +247,8 @@ set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*/node_modules/*,*/vendor*/,*/.idea/*,*
 " NerdTREE
 let NERDTreeHijackNetrw = 0
 
-" Make NerdTREE Easier to toggle.
-nmap <c-b> :NERDTreeToggle<cr>
-nmap <c-R> :CtrlPBufTag<cr>
-nmap <D-r> :CtrlPMRUFiles<cr>
+nmap <c-b> :NERDTreeToggle<cr> " Toggle NerdTREE
+nmap <c-R> :CtrlPBufTag<cr> " Reload tree
 let NERDTreeShowHidden=1 " Show hidden files
 
 " CTags
@@ -283,6 +276,7 @@ map <C-o> :Find<space>
 " --glob: Additional conditions for search (in this case ignore everything in the .git/ folder)
 " --color: Search color options
 command! -bang -nargs=* Find call fzf#vim#grep('rg --column --line-number --no-heading --fixed-strings --ignore-case --hidden --follow --glob "!.git/*" --glob "!build/*" --glob "!tags" --color "always" '.shellescape(<q-args>).'| tr -d "\017"', 1, <bang>0)
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " >>> Magically source the vim file after save
@@ -313,8 +307,8 @@ map <Leader>t :!phpunit %<cr>
 " Edit todo list for project
 nmap ,todo :e todo.txt<cr>
 
-" Learn the way!
-nnoremap <left> :echoe "Use h"<cr>
-nnoremap <right> :echoe "Use l"<cr>
-nnoremap <up> :echoe "Use k"<cr>
-nnoremap <down> :echoe "Use j"<cr>
+" Always show the statusline
+set laststatus=2
+
+" Remap ; to : to enter command-line mode. Rest your pinky!
+nore ; :
