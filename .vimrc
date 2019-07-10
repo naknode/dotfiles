@@ -9,7 +9,7 @@ let g:mapleader= ","
 set nocompatible
 
 " Set to auto read when a file is changed from the outside
-set autoread 
+set autoread
 
 " Ignore case when searching
 set ignorecase
@@ -57,14 +57,8 @@ highlight Search cterm=underline
 " Show (partial) command in the status line
 set showcmd
 
-" Set line number gui's background same color as background
-hi LineNr guibg=bg
-
-" Do same for vertical split's bg
-hi vertsplit guifg=bg guibg=bg
-
-" Fill split with \ (?)
-set fillchars+=vert:\ 
+" Override color scheme to make split the same color as tmux's default
+autocmd ColorScheme * highlight VertSplit cterm=NONE ctermfg=black ctermbg=NONE
 
 " Highlight search
 set hlsearch
@@ -89,6 +83,7 @@ set showmatch
 " Special formatting for PHP and Blade files
 autocmd Filetype blade setlocal ts=4 sw=4 expandtab
 autocmd Filetype php setlocal ts=4 sw=4 expandtab
+autocmd Filetype cs setlocal ts=4 sw=4 expandtab
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -155,6 +150,7 @@ set smarttab
 set tabstop=2
 set softtabstop=2
 set shiftwidth=2
+set expandtab " Expand TABs to spaces
 
 " Linebreak on 500 characters
 set lbr
@@ -239,8 +235,19 @@ let g:ctrlp_show_hidden=1
 let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git|vendor'
 let g:ctrlp_match_window = 'top,order:ttb,min:1,max:30,results:30'
 
+" OmniSharp
+let g:OmniSharp_server_stdio = 1
+let g:OmniSharp_server_use_mono = 1
+let g:OmniSharp_highlight_types = 2
+let g:ale_linters = { 'cs': ['OmniSharp'] }
+
+" Don't autoselect first omnicomplete option, show options even if there is only
+" one (so the preview documentation is accessible). Remove 'preview' if you
+" don't want to see any documentation whatsoever.
+set completeopt=longest,menuone
+
 " I don't want to pull up these folders/files when calling CtrlP
-set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*/node_modules/*,*/vendor*/
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*/node_modules/*,*/vendor*/,*/.idea/*,*/.vs/*
 
 " NerdTREE
 let NERDTreeHijackNetrw = 0
@@ -263,8 +270,19 @@ nmap <Leader>ff :tag<space>
 map <C-p> :GFiles<cr>
 
 " map ctrl+o to ripgrep
-map <C-o> :Rg
+map <C-o> :Find<space>
 
+" --column: Show column number
+" --line-number: Show line number
+" --no-heading: Do not show file headings in results
+" --fixed-strings: Search term as a literal string
+" --ignore-case: Case insensitive search
+" --no-ignore: Do not respect .gitignore, etc...
+" --hidden: Search hidden files and folders
+" --follow: Follow symlinks
+" --glob: Additional conditions for search (in this case ignore everything in the .git/ folder)
+" --color: Search color options
+command! -bang -nargs=* Find call fzf#vim#grep('rg --column --line-number --no-heading --fixed-strings --ignore-case --hidden --follow --glob "!.git/*" --glob "!build/*" --glob "!tags" --color "always" '.shellescape(<q-args>).'| tr -d "\017"', 1, <bang>0)
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " >>> Magically source the vim file after save
