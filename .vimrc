@@ -64,6 +64,9 @@ set hlsearch
 " While typing a search command, show where the pattern, as it was typed so far, matches.
 set incsearch
 
+" Faster drawing on terminals
+set ttyfast
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " >>> Formatting and editing
@@ -80,9 +83,7 @@ hi CursorLine term=none cterm=none ctermbg=3
 set showmatch
 
 " Special formatting for PHP and Blade files
-autocmd Filetype blade setlocal ts=4 sw=4 expandtab
-autocmd Filetype php setlocal ts=4 sw=4 expandtab
-autocmd Filetype cs setlocal ts=4 sw=4 expandtab
+autocmd Filetype "blade,php,cs" setl shiftwidth=4 softtabstop=4 tabstop=4
 
 " Highlight flicker word under cursor
 highlight flicker cterm=bold ctermfg=white
@@ -95,7 +96,8 @@ highlight flicker cterm=bold ctermfg=white
 set background=dark
 
 " Color theme
-colorscheme dracula
+colorscheme tender
+let g:airline_theme = 'tender'
 
 " Enable syntax highlight
 syntax enable
