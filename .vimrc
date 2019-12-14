@@ -46,6 +46,23 @@ set noerrorbells visualbell t_vb=
 " Allow multiple, unsaved buffers and warn if unsaved when exiting buffer
 set hidden
 
+" To open a new empty buffer
+" This replaces :tabnew which I used to bind to this mapping
+nmap <leader>T :enew<cr>
+
+" Move to the next buffer
+nmap <leader>l :bnext<CR>
+
+" Move to the previous buffer
+nmap <leader>h :bprevious<CR>
+
+" Close the current buffer and move to the previous one
+" This replicates the idea of closing a tab
+nmap <leader>bq :bp <BAR> bd #<CR>
+
+" Show all open buffers and their status
+nmap <leader>bl :ls<CR>
+
 " Always show what mode we're currently editing in
 set noshowmode
 
@@ -56,7 +73,7 @@ highlight Search cterm=underline
 set showcmd
 
 " Override color scheme to make split the same color as tmux's default
-autocmd ColorScheme * highlight VertSplit cterm=NONE ctermfg=black ctermbg=NONE
+autocmd ColorScheme * highlight VertSplit cterm=NONE ctermfg=NONE ctermbg=NONE
 
 " Highlight search
 set hlsearch
@@ -67,6 +84,8 @@ set incsearch
 " Faster drawing on terminals
 set ttyfast
 
+" Nice splits
+set fillchars+=vert:\│
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " >>> Formatting and editing
@@ -96,8 +115,8 @@ highlight flicker cterm=bold ctermfg=white
 set background=dark
 
 " Color theme
-colorscheme tender
-let g:airline_theme = 'tender'
+colorscheme dracula
+let g:airline_theme = 'dracula'
 
 " Enable syntax highlight
 syntax enable
@@ -229,43 +248,54 @@ set undoreload=10000              " Number of lines to save for undo
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " CtrlP
 let g:ctrlp_show_hidden=1
-let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git|vendor'
+let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git|vendor|vendor\'
 let g:ctrlp_match_window = 'top,order:ttb,min:1,max:30,results:30'
 
-" OmniSharp
-let g:OmniSharp_server_stdio = 1
-let g:OmniSharp_server_use_mono = 1
-let g:OmniSharp_highlight_types = 2
-let g:ale_linters = { 'cs': ['OmniSharp'] }
-
-" Don't autoselect first omnicomplete option, show options even if there is only
-" one (so the preview documentation is accessible). Remove 'preview' if you
-" don't want to see any documentation whatsoever.
-set completeopt=longest,menuone
-
 " I don't want to pull up these folders/files when calling CtrlP
-set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*/node_modules/*,*/vendor*/,*/.idea/*,*/.vs/*
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*/node_modules/*,*/vendor*/,*/vendor/*,*/.idea/*,*/.vs/*
 
 " NerdTREE
 let NERDTreeHijackNetrw = 0
 
-nmap <c-b> :NERDTreeToggle<cr> " Toggle NerdTREE
-nmap <c-R> :CtrlPBufTag<cr> " Reload tree
+nmap <silent> <C-b> :NERDTreeToggle<CR>
+nmap <C-R> :CtrlPBufTag<cr> " Reload tree
 let NERDTreeShowHidden=1 " Show hidden files
+let NERDTreeAutoDeleteBuffer = 1
+let NERDTreeMinimalUI = 1
+let NERDTreeDirArrows = 1
 
 " CTags
 nmap <Leader>ff :tag<space>
 
+" w0rp/ale
+" Disable lint errors if config file not found
+autocmd FileType javascript let g:ale_linters = findfile('.eslintrc', '.;') != '' ? {'javascript': ['eslint']} : {'javascript': ['']}
+
+let g:ale_pattern_options = {
+      \   '.*\.vue$': {'ale_enabled': 0},
+      \   '.*\.hbs$': {'ale_enabled': 0},
+      \}
+
+let g:ale_maximum_file_size = 500000  " Don't lint large files (> 500KB), it can slow things down
+let g:ale_linters = {}
+let g:ale_linters.javascript = ['tsserver']
+let g:ale_linters.typescript = ['tsserver']
+let g:ale_fixers = {}
+let g:ale_completion_enabled = 1
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " >>> Plugin: fzf & ripgrep
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " map ctrl+p to fzf
-map <C-p> :GFiles<cr>
+nmap <leader>f :GFiles<cr>|     " fuzzy find files in the working directory (where you launched Vim from)
+nmap <leader>/ :BLines<cr>|    " fuzzy find lines in the current file
+nmap <leader>b :Buffers<cr>|   " fuzzy find an open buffer
+nmap <leader>r :Rg |           " fuzzy find text in the working directory
+nmap <leader>c :Commands<cr>|  " fuzzy find Vim commands (like Ctrl-Shift-P in Sublime/Atom/VSC)
 
 " map ctrl+o to ripgrep
-map <C-o> :Find<space>
+map <c-q> :Find<space>
 
 " --column: Show column number
 " --line-number: Show line number
@@ -277,8 +307,12 @@ map <C-o> :Find<space>
 " --follow: Follow symlinks
 " --glob: Additional conditions for search (in this case ignore everything in the .git/ folder)
 " --color: Search color options
-command! -bang -nargs=* Find call fzf#vim#grep('rg --column --line-number --no-heading --fixed-strings --ignore-case --hidden --follow --glob "!.git/*" --glob "!build/*" --glob "!tags" --color "always" '.shellescape(<q-args>).'| tr -d "\017"', 1, <bang>0)
-
+command! -bang -nargs=* Rg
+  \ call fzf#vim#grep(
+  \   'rg --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
+  \   <bang>0 ? fzf#vim#with_preview('up:60%')
+  \           : fzf#vim#with_preview('right:50%:hidden', '?'),
+  \   <bang>0)
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " >>> Magically source the vim file after save
@@ -299,6 +333,8 @@ autocmd FileType vue syntax sync fromstart
 " Make it super simple to edit the .vimrc file
 nmap <Leader>ev :tabedit $MYVIMRC<cr>
 nmap <Leader>evp :tabedit ~/.vim/plugins.vim<cr>
+nmap <Leader>evt :tabedit ~/.tmux.conf<cr>
+
 
 " Add simple highlight removal
 nmap <Leader><space> :nohlsearch<cr>
@@ -312,5 +348,12 @@ nmap ,todo :e todo.txt<cr>
 " Always show the statusline
 set laststatus=2
 
-" Remap ; to : to enter command-line mode. Rest your pinky!
-nore ; :
+" Move selection up or down
+vnoremap J :m '>+1<CR>gv=gv
+vnoremap K :m '<-2<CR>gv=gv
+
+" Git gutter
+set updatetime=100
+let g:gitgutter_override_sign_column_highlight = 1
+let g:gitgutter_sign_added = 'AA'
+highlight SignColumn ctermbg=NONE
