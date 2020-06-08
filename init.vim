@@ -2,18 +2,11 @@
 "# Neovim config (Dan Jasnowski) ###############################################
 "###############################################################################
 
-" Install vim-plug if not already installed
-if empty(glob('~/.config/nvim/autoload/plug.vim'))
-  silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
-    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-endif
-
 " Custom Vim Plug {{{
 " Options for each plugin, helps improve readability of plugin registration
 let g:vim_plug_opts = {
   \ 'mbbill/undotree':              {'on': 'UndotreeToggle' },
   \ 'neoclide/coc.nvim':            {'do': { -> coc#util#install()} },
-  \ 'dracula/vim':                  {'as': 'dracula'},
 \ }
 
 " Register plugin with options
@@ -39,34 +32,32 @@ Plug 'NLKNguyen/papercolor-theme'
 " Search {{{
 Plug 'junegunn/fzf'                                          | " Main FZF plugin
 Plug 'junegunn/fzf.vim'                                      | " Fuzzy finding plugin
-" }}}
+" }}
 
 " Navigation {{{
 Plug 'lambdalisue/fern.vim'                                  | " netrw replacement
-Plug 'lambdalisue/fern-renderer-devicons.vim'                | " Dev icons for fern
 Plug 'ap/vim-buftabline'                                     | " Displays buffers
 " }}}
 
 
 " Visual {{{
 Plug 'arecarn/vim-clean-fold'                                | " Provides function for folds
-Plug 'blueyed/vim-diminactive'                               | " Helps identifying active window
-Plug 'dracula/vim'                                           | " Dracula theme
-Plug 'mhinz/vim-startify'                                    | " Startup screen
-Plug 'ryanoasis/vim-devicons'                                | " Dev icons
-Plug 'vim-scripts/folddigest.vim'                            | " Visualize folds
 Plug 'wincent/loupe'                                         | " Search context improvements
 Plug 'vim-airline/vim-airline'                               | " Airline
 Plug 'vim-airline/vim-airline-themes'                        | " Airline themes
 Plug 'nathanaelkane/vim-indent-guides'                       | " Provides indentation guides
+Plug 'edkolev/tmuxline.vim'
 " }}}
 
 " Editor {{{
-Plug 'junegunn/vim-easy-align'                               | " Helps alignment
-Plug 'romainl/vim-cool'                                      | " Awesome search highlighting
-Plug 'tomtom/tcomment_vim'                                   | " Better commenting
-Plug 'tpope/vim-repeat'                                      | " Improves repeat handling
+Plug 'jesseleite/vim-agriculture'
+Plug 'junegunn/vim-slash'                                    | " Awesome search highlighting
+Plug 'tpope/vim-commentary'                                  | " Better commenting
 Plug 'tpope/vim-surround'                                    | " Surround motions
+Plug 'voldikss/vim-floaterm'                                 | " Floating terminal window
+Plug 'liuchengxu/vista.vim'
+Plug 'alvan/vim-closetag'
+Plug 'craigemery/vim-autotag'
 " }}}
 
 
@@ -74,13 +65,12 @@ Plug 'tpope/vim-surround'                                    | " Surround motion
 Plug 'tpope/vim-obsession'                                   | " Continuously updated session files
 Plug 'dhruvasagar/vim-prosession'                            | " Allows switching between multiple sessions cleanly
 Plug 'airblade/vim-gitgutter'                                | " Show git file diff
-Plug 'liuchengxu/vim-clap', { 'do': ':Clap install-binary' } | " Search for list of things
 Plug 'wakatime/vim-wakatime'                                 | " Wakatime extension to track coding
 Plug 'duggiefresh/vim-easydir'                               | " Create files in dirs that don't exist
 Plug 'tpope/vim-dadbod'                                      | " DB support
 Plug 'kristijanhusak/vim-dadbod-ui'                          | " DB UI support
 Plug 'tpope/vim-fugitive'                                    | " Git tools
-Plug 'wellle/tmux-complete.vim'                              | " Completion for content in tmux
+Plug 'mbbill/undotree'
 " }}}
 
 " Conquer of Completion {{{
@@ -94,7 +84,7 @@ Plug 'pangloss/vim-javascript'                             | " Syntax highlighti
 Plug 'sheerun/vim-polyglot'                                | " Lang pack
 Plug 'leafOfTree/vim-vue-plugin'                           | " Vue.js
 " Plug 'Shougo/deoplete.nvim'                                | " For async completion
-Plug 'Shougo/denite.nvim'                                  | " For Denite features
+" Plug 'Shougo/denite.nvim'                                  | " For Denite features
 " }}}
 
 
@@ -109,6 +99,7 @@ let mapleader = ","                                | " Map leader
 let g:mapleader = ","                              | " Global map leader
 let g:python3_host_prog = '/usr/local/bin/python3' | " Python 3 host
 set encoding=utf8 "                                | " Default file encoding
+set ttyfast
 set hidden                                         | " Make buffers hidden then abandoned
 set noautochdir                                    | " Don't change dirs automatically
 set signcolumn=yes                                 | " Show signcolumns
@@ -118,7 +109,6 @@ set undofile                                       | " Save undos after file clo
 set undodir=$HOME/.vim/undo                        | " Where to save undo histories
 set undolevels=1000                                | " How many undos?
 set undoreload=10000                               | " Number of lines to save for undo
-" let g:deoplete#enable_at_startup = 1               | " Enable deoplete at startup
 set wildignore+=*/tmp/*,*.so,*.swp,*.sw?,.git,.DS_Store,*.zip,*/node_modules/*,*/vendor*/,*/vendor/*,*/.idea/*,*/.vs/*
 " }}}
 
@@ -136,16 +126,20 @@ set expandtab      | " Expand tab to spaces
 set shiftwidth=2   | " Number of spaces for indentation
 set tabstop=2      | " Number of spaces a <Tab> is
 set timeoutlen=500 | " Wait less time for mapped sequences
+let g:closetag_filenames = '*.vue,*.tsx,*.html,*.tsx'
 
 " Special formatting for PHP and Blade files
 autocmd Filetype "blade,php,cs" setl shiftwidth=4 softtabstop=4 tabstop=4
+" Auto source on file save
+autocmd BufWritePost $MYNVIMRC source $MYNVIMRC
+autocmd FileType netrw setl bufhidden=wipe
 " }}}
 
 " Visual {{{
 colorscheme onedark                                   | " Vim theme
 let g:airline_theme='onedark'                         | " Airline theme
 set background=dark
-let &colorcolumn="81,121"                             | " Add indicator for 80 and 120
+let &colorcolumn="121"                             | " Add indicator for 80 and 120
 " set t_CO=256 " Set term color to 256
 let base16colorspace=256                              | " Access colors present in 256 colorspace
 set ttyfast                                           | " Faster drawing on terminals
@@ -157,13 +151,7 @@ set nonu rnu                                          | " Show line numbers and 
 set showmatch                                         | " Show matching braces
 set termguicolors                                     | " Enables 24bit colors
 set showcmd                                           | " Show (partial) command in the status line
-" Highlight Customizations {{{
-highlight Comment gui=italic,bold                     | " Make comments italic
-set cursorline                                        | " Set a line on cursor
-highlight CursorLine term=none cterm=none ctermbg=236 | " Current cursor line
-highlight flicker cterm=bold ctermfg=white            | " Highlight flicker word under cursor
-highlight Search cterm=underline                      | " Search terms in white underline
-autocmd ColorScheme * highlight VertSplit cterm=NONE ctermfg=NONE ctermbg=NONE
+set cursorline
 " }}}
 " }}}
 
@@ -174,11 +162,23 @@ autocmd ColorScheme * highlight VertSplit cterm=NONE ctermfg=NONE ctermbg=NONE
 xmap     ga <Plug>(EasyAlign)
 " Easy align in normal mode
 nmap     ga <Plug>(EasyAlign)
+" Open custom digest for folds
+nnoremap <silent> <Leader>= :call FoldDigest()<CR>
+nnoremap <silent> <Leader>v :FloatermNew --height=0.8 --width=0.8 --wintype=floating --name=gitrepo --autoclose lazygit<CR>
+nnoremap <silent> <Leader>q :call ToggleTheme()<CR>
+nmap [c <Plug>(coc-git-prevchunk)
+nmap ]c <Plug>(coc-git-nextchunk)
+nmap gs <Plug>(coc-git-chunkinfo)
+nmap <silent> <Leader>ev :vs $MYNVIMRC<CR>
+nmap <silent> <Leader>et :vs $TMUXCONF<CR>
+nmap <silent> <Leader>u :UndotreeToggle <bar> :UndotreeFocus<CR>
 " }}}
 
 " Search {{{
 " Open fuzzy files with leader + ,
 nnoremap <silent> <Leader>, :GFiles<CR>
+" Open all files with fuzzy loader
+nnoremap <silent> <Leader>p :Files<CR>
 " Open fuzzy lines with leader l
 nnoremap <silent> <Leader>l :Lines<CR>
 " Open fuzzy buffers with leader b
@@ -188,7 +188,9 @@ nnoremap <silent> <Leader>w :Windows<CR>
 " Open ripgrep
 nnoremap <silent> <Leader>f :Rg<CR>
 " Open ripgrep agriculture for visual selection
+nmap <Leader>/ <Plug>RgRawSearch
 vmap <Leader>/ <Plug>RgRawVisualSelection
+nmap <Leader>* <Plug>RgRawWordUnderCursor
 " }}}
 
 " Switching {{{
@@ -215,8 +217,8 @@ nnoremap <silent> <Leader>o :only<CR>
 nnoremap <silent> <Leader>c :close<CR>
 " Delete the current buffer
 nnoremap <silent> <Leader>x :bdelete<CR>
-" Close all buffers
-nnoremap <silent> <Leader>z :%bdelete<CR>
+" Close all buffers except current one
+nnoremap <silent> <Leader>Z :%bd\|e#<CR>
 " }}}
 
 " Conquer of Completion {{{
@@ -254,52 +256,6 @@ nnoremap <silent> gh :call CocActionAsync('doHover')<CR>
 " }}}
 
 " Search Configuration {{{
-" Some ripgrep searching defaults
-function! RgCommand(ignore) abort
-  return join([
-    \ 'rg',
-    \ '--hidden', '--color ansi', '--column',
-    \ '--line-number', '--no-heading', '--smart-case',
-    \ (a:ignore == 1 ? '--ignore' : '--no-ignore')
-  \], ' ')
-endfunction
-" Adds prompt
-function! PreviewFlags(prompt) abort
-  return ' --prompt="' . a:prompt . '> "'
-endfunction
-" Ensure that only the 4th column delimited by : is filtered by FZF
-function! RgPreviewFlags(prompt) abort
-  return PreviewFlags(a:prompt) . ' --delimiter : --nth 4..'
-endfunction
-" Configs the preview
-function! Preview(flags) abort
-  return fzf#vim#with_preview({'options': a:flags})
-endfunction
-" Executes ripgrep with a preview
-function! Rg(ignore, args, bang) abort
-  let command = RgCommand(a:ignore).' '.shellescape(a:args)
-  call fzf#vim#grep(command, 1, Preview(RgPreviewFlags(a:ignore ? 'Grep' : 'Global Grep')), a:bang)
-  call animate#window_percent_height(0.8)
-endfunction
-
-" Default FZF options with bindings to match layout and select all + none
-let $FZF_DEFAULT_OPTS = join(
-  \ [
-    \ '--layout=default',
-    \ '--info inline',
-    \ '--bind ' . join(
-      \ [
-        \ 'ctrl-a:select-all',
-        \ 'ctrl-d:deselect-all',
-        \ 'tab:toggle+up',
-        \ 'shift-tab:toggle+down',
-        \ 'ctrl-p:toggle-preview'
-      \ ],
-      \ ',',
-    \ )
-  \ ],
-  \ ' ',
-\ )
 " Default location for FZF
 let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
 
@@ -321,7 +277,6 @@ let g:fzf_colors =
 
 " Plugin Configuration {{{
 " Fern {{{
-let g:fern#renderer = "devicons"
 let g:fern#default_hidden = 1
 let g:fern#default_exclude = &wildignore
 " }}}
@@ -365,7 +320,7 @@ set nowritebackup
 " Remove messages from in-completion menus
 set shortmess+=c
 " You will have bad experience for diagnostic messages when it's default 4000.
-set updatetime=300
+set updatetime=100
 " }}}
 
 " Use tab for trigger completion
@@ -385,19 +340,12 @@ endfunction
 let g:coc_snippet_next = '<tab>'
 " }}}
 
-" Startify {{{
-" Changes startify to have a different heading and only dirs
-let g:startify_lists = [ { 'type': 'dir', 'header': ['   Recent Files'] } ]
-" Don't change directories
-let g:startify_change_to_dir = 0
-" }}}
-
 " Indent Guides {{{
 let g:indent_guides_enable_on_vim_startup = 1
 let g:indent_guides_guide_size = 1
 let g:indent_guides_start_level = 2
 let g:indent_guides_color_change_percent = 1
-let g:indent_guides_exclude_filetypes = ['help', 'startify', 'fzf']
+let g:indent_guides_exclude_filetypes = ['help', 'startify', 'fzf', 'fern']
 " }}}
 
 " Fold Digest {{{
@@ -409,14 +357,44 @@ let folddigest_size = 40
 let g:airline_powerline_fonts = 1
 " }}}
 
+" Vista {{{
+let g:vista#renderer#enable_icon = 1
+let g:vista_icon_indent = ["╰─▸ ", "├─▸ "]
+let g:vista_fzf_preview = ['right:70%']
 " }}}
 
-" Auto Commands {{{
-augroup TermHandling
-  autocmd!
-  if has('nvim')
-    autocmd! TermOpen * let g:last_open_term_id = b:terminal_job_id
-  endif
-augroup END
+" Gitgutter {{{
+let g:gitgutter_sign_added = '▌'
+let g:gitgutter_sign_modified = '▌'
+let g:gitgutter_sign_removed = '▁'
+let g:gitgutter_sign_removed_first_line = '▌'
+let g:gitgutter_sign_modified_removed = '▌'
+let g:gitgutter_map_keys = 0
+let g:gitgutter_realtime = 1
+" }}}
+
+" Theme {{{
+function! ToggleTheme()
+    let s:light_theme = 'PaperColor'
+    let s:dark_theme = 'onedark'
+
+    if &background ==? 'dark'
+      execute "colorscheme " . s:light_theme
+      execute ":AirlineTheme " . tolower(s:light_theme)
+      execute ":set background=light"
+      echom 'Switching to ' . s:light_theme
+      execute "silent !tmux source-file " . shellescape(expand('~/.....'))
+    else
+      execute "colorscheme " . s:dark_theme
+      execute ":AirlineTheme " . s:dark_theme
+      execute ":set background=dark"
+      echom 'Switching to ' . s:dark_theme
+    endif
+endfunction
+" }}}
+
+" Floaterm {{{
+let g:floaterm_wintitle=0
+" }}}
 
 " }}}
