@@ -1,0 +1,52 @@
+{
+  "suggest.noselect": false,
+  "coc.preferences.formatOnSaveFiletypes": [
+    "css",
+    "Markdown",
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "json",
+    "typescript.tsx"
+  ],
+  "git.addGBlameToVirtualText": false,
+  "git.addedSign.hlGroup": "GitGutterAdd",
+  "git.changedSign.hlGroup": "GitGutterChange",
+  "git.removedSign.hlGroup": "GitGutterDelete",
+  "git.topRemovedSign.hlGroup": "GitGutterDelete",
+  "git.changeRemovedSign.hlGroup": "GitGutterChangeDelete",
+  "git.addedSign.text":"▋",
+  "git.changedSign.text":"▋",
+  "git.removedSign.text":"▋",
+  "git.topRemovedSign.text": "▔",
+  "git.changeRemovedSign.text": "▋",
+  "git.enableGutters": true,
+  "prettier.statusItemText": "ⓟ ",
+  "prettier.eslintIntegration": true,
+  "emmet.includeLanguages": {"vue-html": "html", "javascript": "javascriptreact"},
+  "eslint.filetypes": ["javascript", "javascript.jsx", "javascriptreact"],
+  "eslint.autoFix": true,
+  "eslint.autoFixOnSave": true,
+  "languageserver": {
+    "haskell": {
+      "command": "hie-wrapper",
+      "args": ["--lsp"],
+      "rootPatterns": [
+        "*.cabal",
+        "stack.yaml",
+        "cabal.project",
+        "package.yaml"
+      ],
+      "filetypes": [
+        "hs",
+        "lhs",
+        "haskell"
+      ],
+      "initializationOptions": {
+        "languageServerHaskell": {
+        }
+      }
+    }
+  }
+}
