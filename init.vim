@@ -74,7 +74,7 @@ Plug 'mbbill/undotree'
 " }}}
 
 " Conquer of Completion {{{
-Plug 'neoclide/coc.nvim'                                     | " Completion provider (a la VS Code)
+" Plug 'neoclide/coc.nvim'                                     | " Completion provider (a la VS Code)
 " }}}
 
 " Syntax {{{
@@ -166,9 +166,9 @@ nmap     ga <Plug>(EasyAlign)
 nnoremap <silent> <Leader>= :call FoldDigest()<CR>
 nnoremap <silent> <Leader>v :FloatermNew --height=0.8 --width=0.8 --wintype=floating --name=gitrepo --autoclose lazygit<CR>
 nnoremap <silent> <Leader>q :call ToggleTheme()<CR>
-nmap [c <Plug>(coc-git-prevchunk)
-nmap ]c <Plug>(coc-git-nextchunk)
-nmap gs <Plug>(coc-git-chunkinfo)
+nmap ]c <Plug>(GitGutterNextHunk)
+nmap [c <Plug>(GitGutterPrevHunk)
+" nmap gs <Plug>(coc-git-chunkinfo
 nmap <silent> <Leader>ev :vs $MYNVIMRC<CR>
 nmap <silent> <Leader>et :vs $TMUXCONF<CR>
 nmap <silent> <Leader>u :UndotreeToggle <bar> :UndotreeFocus<CR>
@@ -223,29 +223,29 @@ nnoremap <silent> <Leader>Z :%bd\|e#<CR>
 
 " Conquer of Completion {{{
 " Get outline
-nnoremap <silent> <Leader>co :<C-u>CocList outline<CR>
-" Get symbols
-nnoremap <silent> <Leader>cs :<C-u>CocList -I symbols<CR>
-" Get errors
-nnoremap <silent> <Leader>cl :<C-u>CocList locationlist<CR>
-" Get available commands
-nnoremap <silent> <Leader>cc :<C-u>CocList commands<CR>
-" Rename
-nmap <Leader>$ <Plug>(coc-rename)
-" Go to definition
-nmap gd <Plug>(coc-definition)
-" Go to type definition
-nmap <silent> gy <Plug>(coc-type-definition)
-" Go to implementation
-nmap <silent> gi <Plug>(coc-implementation)
-" Go to references
-nmap <silent> gr <Plug>(coc-references)
-" Go to type
-nmap <silent> gy <Plug>(coc-type-definition)
-" Go to implementation
-nmap <silent> gi <Plug>(coc-implementation)
-" Get hint
-nnoremap <silent> gh :call CocActionAsync('doHover')<CR>
+" nnoremap <silent> <Leader>co :<C-u>CocList outline<CR>
+" " Get symbols
+" nnoremap <silent> <Leader>cs :<C-u>CocList -I symbols<CR>
+" " Get errors
+" nnoremap <silent> <Leader>cl :<C-u>CocList locationlist<CR>
+" " Get available commands
+" nnoremap <silent> <Leader>cc :<C-u>CocList commands<CR>
+" " Rename
+" nmap <Leader>$ <Plug>(coc-rename)
+" " Go to definition
+" nmap gd <Plug>(coc-definition)
+" " Go to type definition
+" nmap <silent> gy <Plug>(coc-type-definition)
+" " Go to implementation
+" nmap <silent> gi <Plug>(coc-implementation)
+" " Go to references
+" nmap <silent> gr <Plug>(coc-references)
+" " Go to type
+" nmap <silent> gy <Plug>(coc-type-definition)
+" " Go to implementation
+" nmap <silent> gi <Plug>(coc-implementation)
+" " Get hint
+" nnoremap <silent> gh :call CocActionAsync('doHover')<CR>
 " }}}
 
 " Custom Tools {{{
@@ -292,24 +292,24 @@ let g:LoupeClearHighlightMap = 0
 " Conquer of Completion {{{
 
 " Plugins {{{
-let g:coc_global_extensions = [
-  \ 'coc-css',
-  \ 'coc-eslint',
-  \ 'coc-git',
-  \ 'coc-html',
-  \ 'coc-json',
-  \ 'coc-lists',
-  \ 'coc-pairs',
-  \ 'coc-phpls',
-  \ 'coc-prettier',
-  \ 'coc-sh',
-  \ 'coc-snippets',
-  \ 'coc-stylelint',
-  \ 'coc-tslint',
-  \ 'coc-tsserver',
-  \ 'coc-vimlsp',
-  \ 'coc-yaml',
-\ ]
+" let g:coc_global_extensions = [
+"   \ 'coc-css',
+"   \ 'coc-eslint',
+"   \ 'coc-git',
+"   \ 'coc-html',
+"   \ 'coc-json',
+"   \ 'coc-lists',
+"   \ 'coc-pairs',
+"   \ 'coc-phpls',
+"   \ 'coc-prettier',
+"   \ 'coc-sh',
+"   \ 'coc-snippets',
+"   \ 'coc-stylelint',
+"   \ 'coc-tslint',
+"   \ 'coc-tsserver',
+"   \ 'coc-vimlsp',
+"   \ 'coc-yaml',
+" \ ]
 " }}}
 
 " CoC Related Settings {{{
@@ -324,20 +324,20 @@ set updatetime=100
 " }}}
 
 " Use tab for trigger completion
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
+" inoremap <silent><expr> <TAB>
+"       \ pumvisible() ? "\<C-n>" :
+"       \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+"       \ <SID>check_back_space() ? "\<TAB>" :
+"       \ coc#refresh()
 
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+" inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
+" function! s:check_back_space() abort
+"   let col = col('.') - 1
+"   return !col || getline('.')[col - 1]  =~# '\s'
+" endfunction
 
-let g:coc_snippet_next = '<tab>'
+" let g:coc_snippet_next = '<tab>'
 " }}}
 
 " Indent Guides {{{
@@ -396,5 +396,29 @@ endfunction
 " Floaterm {{{
 let g:floaterm_wintitle=0
 " }}}
+
+" Coc {{{
+" Use `lp` and `ln` for navigate diagnostics
+" nmap <silent> <leader>lp <Plug>(coc-diagnostic-prev)
+" nmap <silent> <leader>ln <Plug>(coc-diagnostic-next)
+
+" " Remap keys for gotos
+" nmap <silent> <leader>ld <Plug>(coc-definition)
+" nmap <silent> <leader>lt <Plug>(coc-type-definition)
+" nmap <silent> <leader>li <Plug>(coc-implementation)
+" nmap <silent> <leader>lf <Plug>(coc-references)
+
+" Use K for show documentation in preview window
+" nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if &filetype == 'vim'
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+" }}}
+
 
 " }}}
