@@ -7,6 +7,7 @@
     "javascriptreact",
     "typescript",
     "typescriptreact",
+    "vue",
     "json",
     "typescript.tsx"
   ],
@@ -23,9 +24,8 @@
   "git.changeRemovedSign.text": "▋",
   "git.enableGutters": true,
   "prettier.statusItemText": "ⓟ ",
-  "prettier.eslintIntegration": true,
-  "emmet.includeLanguages": {"vue-html": "html", "javascript": "javascriptreact"},
-  "eslint.filetypes": ["javascript", "javascript.jsx", "javascriptreact"],
+  "prettier.eslintIntegration": false,
+  "eslint.filetypes": ["javascript", "javascript.jsx", "javascriptreact", "typescript", "vue"],
   "eslint.autoFix": true,
   "eslint.autoFixOnSave": true,
   "languageserver": {
@@ -48,5 +48,7 @@
         }
       }
     }
-  }
+  },
+  "vetur.validation.template": false,
+  "vetur.useWorkspaceDependencies": true
 }
