@@ -13,9 +13,13 @@ call plug#begin('~/.vim/plugged')
 
 Plug 'junegunn/seoul256.vim'
 Plug 'tpope/vim-sensible'
-Plug 'arecarn/vim-clean-fold'
-Plug 'vim-scripts/folddigest.vim'
 Plug 'airblade/vim-gitgutter'
+Plug 'bignimbus/pop-punk.vim'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+Plug 'pbogut/fzf-mru.vim'
+Plug 'airblade/vim-gitgutter'
+Plug 'NLKNguyen/papercolor-theme'
 
 call plug#end()
 
@@ -26,20 +30,39 @@ set foldtext=clean_fold#fold_text_minimal()
 set background=dark
 " Set term color to 256
 set t_CO=256
-colorscheme seoul256
+colorscheme PaperColor
+let g:terminal_ansi_colors = pop_punk#AnsiColors()
+let g:fzf_layout = { 'window': { 'width': 0.8, 'height': 0.5, 'highlight': 'Comment'} }
+hi! fzf_fg ctermfg=14                                                                                                                                                       
+hi! fzf_fgp ctermfg=3                                                                                                                                                       
+hi! fzf_hl ctermfg=5                                                                                                                                                        
+hi! fzf_hlp ctermfg=5                                                                                                                                                       
+hi! fzf_info ctermfg=6                                                                                                                                                      
+hi! fzf_prompt ctermfg=6                                                                                                                                                    
+hi! fzf_spinner ctermfg=6                                                                                                                                                   
+hi! fzf_pointer ctermfg=3
+let g:fzf_colors = {                                                                                                                                                        
+  \ 'fg':      ['fg', 'fzf_fg'],                                                                                                                                            
+  \ 'hl':      ['fg', 'fzf_hl'],                                                                                                                                            
+  \ 'fg+':     ['fg', 'fzf_fgp'],                                                                                                                                           
+  \ 'hl+':     ['fg', 'fzf_hlp'],                                                                                                                                           
+  \ 'info':    ['fg', 'fzf_info'],                                                                                                                                          
+  \ 'prompt':  ['fg', 'fzf_prompt'],                                                                                                                                        
+  \ 'pointer': ['fg', 'fzf_pointer'],                                                                                                                                       
+  \ 'spinner': ['fg', 'fzf_spinner'] }
 " }}}
 
 " {{ Other
 " Enable syntax highlight
 syntax on
 " Numbers
-set nu
+set nonu rnu
 " }}}
 " }}}
 
-" Fold Digest {{{
-let folddigest_options = "nofoldclose,vertical,flexnumwidth"
-let folddigest_size = 40
-" }}}
+nmap ]h <Plug>(GitGutterNextHunk)
+nmap [h <Plug>(GitGutterPrevHunk)
+
+nmap <silent><Leader>g :call setbufvar(winbufnr(popup_atcursor(split(system("git log -n 1 -L " . line(".") . ",+1:" . expand("%:p")), "\n"), { "padding": [1,1,1,1], "pos": "botleft", "wrap": 0 })), "&filetype", "git")<CR>
 
 set fdm=marker
