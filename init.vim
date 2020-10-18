@@ -24,25 +24,36 @@ call plug#begin(expand('~/.config/nvim/plugged'))
 Plug 'christoomey/vim-tmux-navigator'                        | " Pane navigation
 Plug 'tpope/vim-sensible'                                    | " Sensible defaults
 Plug 'wincent/terminus'                                      | " Terminal integration improvements
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-sleuth'
 
 Plug 'joshdick/onedark.vim'                                  | " My current vim theme
 Plug 'NLKNguyen/papercolor-theme'
+Plug 'andreypopp/vim-colors-plain'
 " }}}
 
 " Search {{{
-Plug 'junegunn/fzf'                                          | " Main FZF plugin
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'                                      | " Fuzzy finding plugin
+Plug 'mcchrish/nnn.vim'
+Plug 'francoiscabrol/ranger.vim'
+Plug 'rbgrouleff/bclose.vim'
+Plug 'vifm/vifm.vim'
 " }}
 
 " Navigation {{{
 Plug 'lambdalisue/fern.vim'                                  | " netrw replacement
 Plug 'ap/vim-buftabline'                                     | " Displays buffers
+Plug 'chaoren/vim-wordmotion'
+Plug 'wellle/targets.vim'
+" Plug 'wfxr/minimap.vim' " NEED TO UPDATE TO neovim 0.5.0
 " }}}
 
 
 " Visual {{{
 Plug 'arecarn/vim-clean-fold'                                | " Provides function for folds
 Plug 'wincent/loupe'                                         | " Search context improvements
+" Look into https://github.com/hardcoreplayers/spaceline.vim
 Plug 'vim-airline/vim-airline'                               | " Airline
 Plug 'vim-airline/vim-airline-themes'                        | " Airline themes
 Plug 'nathanaelkane/vim-indent-guides'                       | " Provides indentation guides
@@ -57,7 +68,7 @@ Plug 'tpope/vim-surround'                                    | " Surround motion
 Plug 'voldikss/vim-floaterm'                                 | " Floating terminal window
 Plug 'liuchengxu/vista.vim'
 Plug 'alvan/vim-closetag'
-Plug 'craigemery/vim-autotag'
+" Plug 'craigemery/vim-autotag'
 " }}}
 
 
@@ -74,18 +85,19 @@ Plug 'mbbill/undotree'
 " }}}
 
 " Conquer of Completion {{{
-" Plug 'neoclide/coc.nvim'                                     | " Completion provider (a la VS Code)
+Plug 'neoclide/coc.nvim'                                     | " Completion provider (a la VS Code)
 " }}}
 
 " Syntax {{{
 Plug 'HerringtonDarkholme/yats.vim'                        | " TypeScript syntax highlighter
-Plug 'mhartington/nvim-typescript', {'do': './install.sh'} | " TypeScript tooling
+" Plug 'mhartington/nvim-typescript', {'do': ':!install.sh \| UpdateRemotePlugins'} | " Typescrpt
 Plug 'pangloss/vim-javascript'                             | " Syntax highlighting in JavaScript
 Plug 'sheerun/vim-polyglot'                                | " Lang pack
 Plug 'leafOfTree/vim-vue-plugin'                           | " Vue.js
 " Plug 'Shougo/deoplete.nvim'                                | " For async completion
 " Plug 'Shougo/denite.nvim'                                  | " For Denite features
 " }}}
+let g:deoplete#enable_at_startup = 1
 
 
 " End the plugin registration
@@ -97,7 +109,7 @@ call plug#end()
 " General {{{
 let mapleader = ","                                | " Map leader
 let g:mapleader = ","                              | " Global map leader
-let g:python3_host_prog = '/usr/local/bin/python3' | " Python 3 host
+let g:python3_host_prog = '/usr/bin/python3' | " Python 3 host
 set encoding=utf8 "                                | " Default file encoding
 set ttyfast
 set hidden                                         | " Make buffers hidden then abandoned
@@ -110,10 +122,14 @@ set undodir=$HOME/.vim/undo                        | " Where to save undo histor
 set undolevels=1000                                | " How many undos?
 set undoreload=10000                               | " Number of lines to save for undo
 set wildignore+=*/tmp/*,*.so,*.swp,*.sw?,.git,.DS_Store,*.zip,*/node_modules/*,*/vendor*/,*/vendor/*,*/.idea/*,*/.vs/*
+let g:LanguageClient_serverCommands = {
+    \ 'vue': ['vls']
+    \ }
 " }}}
 
 " Search {{{
 set ignorecase         | " Ignores case in search
+set smartindent
 set smartcase          | " Overrides ignore when capital exists
 if has('nvim')
   set inccommand=split | " Displays incremental replacement
@@ -130,6 +146,8 @@ let g:closetag_filenames = '*.vue,*.tsx,*.html,*.tsx'
 
 " Special formatting for PHP and Blade files
 autocmd Filetype "blade,php,cs" setl shiftwidth=4 softtabstop=4 tabstop=4
+autocmd Filetype "vue" setl foldmethod=syntax
+autocmd BufRead,BufNewFile *.vue setfiletype html
 " Auto source on file save
 autocmd BufWritePost $MYNVIMRC source $MYNVIMRC
 autocmd FileType netrw setl bufhidden=wipe
@@ -164,11 +182,11 @@ xmap     ga <Plug>(EasyAlign)
 nmap     ga <Plug>(EasyAlign)
 " Open custom digest for folds
 nnoremap <silent> <Leader>= :call FoldDigest()<CR>
-nnoremap <silent> <Leader>v :FloatermNew --height=0.8 --width=0.8 --wintype=floating --name=gitrepo --autoclose lazygit<CR>
+nnoremap <silent> <Leader>v :FloatermNew --height=0.8 --width=0.8 --wintype=floating --name=gitrepo --autoclose=2 lazygit<CR>
 nnoremap <silent> <Leader>q :call ToggleTheme()<CR>
 nmap ]c <Plug>(GitGutterNextHunk)
 nmap [c <Plug>(GitGutterPrevHunk)
-" nmap gs <Plug>(coc-git-chunkinfo
+nmap gs <Plug>(coc-git-chunkinfo)
 nmap <silent> <Leader>ev :vs $MYNVIMRC<CR>
 nmap <silent> <Leader>et :vs $TMUXCONF<CR>
 nmap <silent> <Leader>u :UndotreeToggle <bar> :UndotreeFocus<CR>
@@ -187,6 +205,8 @@ nnoremap <silent> <Leader>b :Buffers<CR>
 nnoremap <silent> <Leader>w :Windows<CR>
 " Open ripgrep
 nnoremap <silent> <Leader>f :Rg<CR>
+nnoremap <silent> <Leader>r :FloatermNew ranger<CR>
+nnoremap <silent> <Leader>F :FloatermNew vifm<CR>
 " Open ripgrep agriculture for visual selection
 nmap <Leader>/ <Plug>RgRawSearch
 vmap <Leader>/ <Plug>RgRawVisualSelection
@@ -218,45 +238,50 @@ nnoremap <silent> <Leader>c :close<CR>
 " Delete the current buffer
 nnoremap <silent> <Leader>x :bdelete<CR>
 " Close all buffers except current one
-nnoremap <silent> <Leader>Z :%bd\|e#<CR>
+nnoremap <silent> <Leader>Z :%bd\|e#\|bd#<CR>
 " }}}
 
 " Conquer of Completion {{{
 " Get outline
-" nnoremap <silent> <Leader>co :<C-u>CocList outline<CR>
-" " Get symbols
-" nnoremap <silent> <Leader>cs :<C-u>CocList -I symbols<CR>
-" " Get errors
-" nnoremap <silent> <Leader>cl :<C-u>CocList locationlist<CR>
-" " Get available commands
-" nnoremap <silent> <Leader>cc :<C-u>CocList commands<CR>
-" " Rename
-" nmap <Leader>$ <Plug>(coc-rename)
-" " Go to definition
-" nmap gd <Plug>(coc-definition)
-" " Go to type definition
-" nmap <silent> gy <Plug>(coc-type-definition)
-" " Go to implementation
-" nmap <silent> gi <Plug>(coc-implementation)
-" " Go to references
-" nmap <silent> gr <Plug>(coc-references)
-" " Go to type
-" nmap <silent> gy <Plug>(coc-type-definition)
-" " Go to implementation
-" nmap <silent> gi <Plug>(coc-implementation)
-" " Get hint
-" nnoremap <silent> gh :call CocActionAsync('doHover')<CR>
+nnoremap <silent> <Leader>co :<C-u>CocList outline<CR>
+" Get symbols
+nnoremap <silent> <Leader>cs :<C-u>CocList -I symbols<CR>
+" Get errors
+nnoremap <silent> <Leader>cl :<C-u>CocList locationlist<CR>
+" Get available commands
+nnoremap <silent> <Leader>cc :<C-u>CocList commands<CR>
+" Rename
+nmap <Leader>$ <Plug>(coc-rename)
+" Go to definition
+nmap gd <Plug>(coc-definition)
+" Go to type definition
+nmap <silent> gy <Plug>(coc-type-definition)
+" Go to implementation
+nmap <silent> gi <Plug>(coc-implementation)
+" Go to references
+nmap <silent> gr <Plug>(coc-references)
+" Get hint
+nnoremap <silent> gh :call CocActionAsync('doHover')<CR>
+" Use `[g` and `]g` to navigate diagnostics
+" Use `:CocDiagnostics` to get all diagnostics
+" of current buffer in location list.
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
 " }}}
 
 " Custom Tools {{{
 " Open lazygit
-" nnoremap <silent> <Leader>g :call openterm#horizontal('lazygit', 0.8)<CR>
+nnoremap <silent> <Leader>g :call openterm#horizontal('lazygit', 0.8)<CR>
 " }}}
 
 " }}}
 
 " Search Configuration {{{
 " Default location for FZF
+nnoremap <leader>n :NnnPicker '%:p:h'<CR>
+nnoremap <silent><Leader><space> :nohlsearch<CR>
+let g:ranger_map_keys = 0 
+let g:nnn#layout = { 'window': { 'width': 0.9, 'height': 0.6, 'highlight': 'Debug' } }
 let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
 
 let g:fzf_colors =
@@ -276,6 +301,9 @@ let g:fzf_colors =
 " }}}
 
 " Plugin Configuration {{{
+" Ranger {{{
+let g:ranger_replace_netrw = 1 " open ranger when vim open a director
+" }}}
 " Fern {{{
 let g:fern#default_hidden = 1
 let g:fern#default_exclude = &wildignore
@@ -289,27 +317,42 @@ let g:buftabline_indicators = 1
 let g:LoupeClearHighlightMap = 0
 " }}}
 
+" General Editor {{{
+inoremap <expr> <CR> InsertMapForEnter()
+function! InsertMapForEnter()
+  if pumvisible()
+      return "\<C-y>"
+  elseif strcharpart(getline('.'),getpos('.')[2]-1,1) == '}'
+      return "\<CR>\<Esc>O"
+  elseif strcharpart(getline('.'),getpos('.')[2]-1,2) == '</'
+      return "\<CR>\<Esc>O"
+  else
+      return "\<CR>"
+  endif
+endfunction
+" }}}
+
 " Conquer of Completion {{{
 
 " Plugins {{{
-" let g:coc_global_extensions = [
-"   \ 'coc-css',
-"   \ 'coc-eslint',
-"   \ 'coc-git',
-"   \ 'coc-html',
-"   \ 'coc-json',
-"   \ 'coc-lists',
-"   \ 'coc-pairs',
-"   \ 'coc-phpls',
-"   \ 'coc-prettier',
-"   \ 'coc-sh',
-"   \ 'coc-snippets',
-"   \ 'coc-stylelint',
-"   \ 'coc-tslint',
-"   \ 'coc-tsserver',
-"   \ 'coc-vimlsp',
-"   \ 'coc-yaml',
-" \ ]
+let g:coc_global_extensions = [
+  \ 'coc-css',
+  \ 'coc-eslint',
+  \ 'coc-git',
+  \ 'coc-html',
+  \ 'coc-json',
+  \ 'coc-lists',
+  \ 'coc-pairs',
+  \ 'coc-phpls',
+  \ 'coc-prettier',
+  \ 'coc-sh',
+  \ 'coc-snippets',
+  \ 'coc-stylelint',
+  \ 'coc-tslint',
+  \ 'coc-tsserver',
+  \ 'coc-vimlsp',
+  \ 'coc-yaml',
+\ ]
 " }}}
 
 " CoC Related Settings {{{
@@ -324,20 +367,20 @@ set updatetime=100
 " }}}
 
 " Use tab for trigger completion
-" inoremap <silent><expr> <TAB>
-"       \ pumvisible() ? "\<C-n>" :
-"       \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
-"       \ <SID>check_back_space() ? "\<TAB>" :
-"       \ coc#refresh()
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
 
-" inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
-" function! s:check_back_space() abort
-"   let col = col('.') - 1
-"   return !col || getline('.')[col - 1]  =~# '\s'
-" endfunction
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
 
-" let g:coc_snippet_next = '<tab>'
+let g:coc_snippet_next = '<tab>'
 " }}}
 
 " Indent Guides {{{
@@ -349,8 +392,8 @@ let g:indent_guides_exclude_filetypes = ['help', 'startify', 'fzf', 'fern']
 " }}}
 
 " Fold Digest {{{
-let folddigest_options = "nofoldclose,vertical,flexnumwidth"
-let folddigest_size = 40
+" let folddigest_options = "nofoldclose,vertical,flexnumwidth"
+" let folddigest_size = 40
 " }}}
 
 " Airline {{{
@@ -399,17 +442,25 @@ let g:floaterm_wintitle=0
 
 " Coc {{{
 " Use `lp` and `ln` for navigate diagnostics
-" nmap <silent> <leader>lp <Plug>(coc-diagnostic-prev)
-" nmap <silent> <leader>ln <Plug>(coc-diagnostic-next)
+nmap <silent> <leader>lp <Plug>(coc-diagnostic-prev)
+nmap <silent> <leader>ln <Plug>(coc-diagnostic-next)
+
+" Remap keys for applying codeAction to the current line.
+nmap <leader>ac  <Plug>(coc-codeaction)
+" Apply AutoFix to problem on the current line.
+nmap <leader>qf  <Plug>(coc-fix-current)
+
+" Show autocomplete when Tab is pressed
+inoremap <silent><expr> <Tab> coc#refresh()
 
 " " Remap keys for gotos
-" nmap <silent> <leader>ld <Plug>(coc-definition)
-" nmap <silent> <leader>lt <Plug>(coc-type-definition)
-" nmap <silent> <leader>li <Plug>(coc-implementation)
-" nmap <silent> <leader>lf <Plug>(coc-references)
+nmap <silent> <leader>ld <Plug>(coc-definition)
+nmap <silent> <leader>lt <Plug>(coc-type-definition)
+nmap <silent> <leader>li <Plug>(coc-implementation)
+nmap <silent> <leader>lf <Plug>(coc-references)
 
 " Use K for show documentation in preview window
-" nnoremap <silent> K :call <SID>show_documentation()<CR>
+nnoremap <silent> K :call <SID>show_documentation()<CR>
 
 function! s:show_documentation()
   if &filetype == 'vim'
