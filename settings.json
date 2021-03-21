@@ -4,7 +4,7 @@
   "window.zoomLevel": 0,
   "git.enableSmartCommit": true,
   "editor.matchBrackets": "always",
-  "workbench.colorTheme": "BeardedTheme Anthracite",
+  "workbench.colorTheme": "BeardedTheme Monokai Terra",
   "workbench.statusBar.visible": true,
   "explorer.openEditors.visible": 0,
   "workbench.activityBar.visible": false,
@@ -23,13 +23,12 @@
   "editor.fontLigatures": true,
   "editor.cursorStyle": "block",
   "editor.cursorWidth": 8,
-  "editor.formatOnPaste": true,
   "emmet.includeLanguages": {
     "javascript": "javascriptreact",
     "jsx-sublime-babel-tags": "javascriptreact"
   },
   "php-cs-fixer.executablePath": "${extensionPath}/php-cs-fixer.phar",
-  "php-cs-fixer.lastDownload": 1601680199484,
+  "php-cs-fixer.lastDownload": 1611031518247,
   "breadcrumbs.enabled": false,
   "git.confirmSync": false,
   "javascript.updateImportsOnFileMove.enabled": "always",
