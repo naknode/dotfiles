@@ -1,6 +1,9 @@
 export PATH=$HOME/bin:/usr/local/bin:~/.config/composer/vendor/bin:$PATH
 ZSH_DISABLE_COMPFIX=true
-ZSH_THEME="robbyrussell"
+ZSH_THEME="afowler"
+
+export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
 
 export NNN_PLUG='f:finder;o:fzopen;p:mocplay;d:diffs;t:nmount;v:imgview';
 
@@ -45,7 +48,7 @@ alias dan="vim"
 alias ggr="ghost restart"
 
 # Utilities
-alias cat="bat"
+alias cat="batcat"
 
 # NPM Scripts
 alias ns="npm start"
