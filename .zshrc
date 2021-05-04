@@ -2,22 +2,11 @@ export PATH=$HOME/bin:/usr/local/bin:~/.config/composer/vendor/bin:$PATH
 ZSH_DISABLE_COMPFIX=true
 ZSH_THEME="afowler"
 
-export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
-
-export NNN_PLUG='f:finder;o:fzopen;p:mocplay;d:diffs;t:nmount;v:imgview';
-
-export PATH="/home/dan/.pyenv/bin:$PATH"
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
-
 # export VIMINIT='source $MYVIMRC'
 export EDITOR='vim'
 export MYVIMRC='~/.vimrc'
 export MYNVIMRC='~/.config/nvim/init.vim'
 export TMUXCONF='~/.tmux.conf'
-
-export PATH="$PATH:`yarn global bin`"
 
 eval "$(fasd --init auto)"
 
@@ -30,27 +19,10 @@ export ZSH=/home/dan/.oh-my-zsh
 
 export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --glob "!.git/*"'
 
-#---------
-# ALIASES
-#---------
-# Ubuntu
-# Blueooth 1.0
-alias bt1="pactl unload-module  module-bluetooth-discover"
-alias b2="pactl unload-module  module-bluetooth-discover || pactl   load-module  module-bluetooth-discover"
-alias bt="pactl load-module module-bluetooth-discover"
-# Heroku
-alias h="heroku --app delaford"
-alias hl="heroku logs --tail --app delaford"
-alias hrb="heroku run bash"
-
-alias dan="vim"
-
-alias ggr="ghost restart"
-
-# Utilities
-alias cat="batcat"
+ZSH_THEME=""
 
 # NPM Scripts
+alias vs="npm run serve"
 alias ns="npm start"
 alias nb="npm run build"
 alias nrw="npm run watch"
@@ -102,24 +74,17 @@ alias ephpcs="vim ~/.vscode/.php_cs"
 alias etmux="vim ~/.tmux.conf"
 alias envim="nvim ~/.config/nvim/init.vim"
 
-alias ma='tmux attach || { (while ! tmux run-shell ~/.tmux/plugins/tmux-resurrect/scripts/restore.sh; do sleep 0.2; done)& tmux ; }'
+# Uncomment the following line to automatically update without prompting.
+DISABLE_UPDATE_PROMPT="true"
 
-alias phpini='sublime "$(pecl config-get php_ini)"'
-
-# Projects
-# Delaford
-alias vs="npm run serve"
-alias dn="npm run dev:node"
-
-# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
-# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-# Add wisely, as too many plugins slow down shell startup.
-plugins=(
-  git
-)
+plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
 
 source $ZSH/oh-my-zsh.sh
+fpath=($fpath "/home/dan/.zfunctions")
+
+# Set Spaceship ZSH as a prompt
+autoload -U promptinit; promptinit
+prompt spaceship
 
 # History in cache directory:
 HISTSIZE=10000
@@ -127,56 +92,6 @@ SAVEHIST=10000
 HISTFILE=~/.cache/zshhistory
 setopt appendhistory
 
-# User configuration
+export PATH=$PATH:/usr/local/go/bin
 
-# export MANPATH="/usr/local/man:$MANPATH"
-
-# You may need to manually set your language environment
-# export LANG=en_US.UTF-8
-
-# Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='mvim'
-# fi
-
-# Compilation flags
-# export ARCHFLAGS="-arch x86_64"
-
-# ssh
-# export SSH_KEY_PATH="~/.ssh/rsa_id"
-
-# Set personal aliases, overriding those provided by oh-my-zsh libs,
-# plugins, and themes. Aliases can be placed here, though oh-my-zsh
-# users are encouraged to define aliases within the ZSH_CUSTOM folder.
-# For a full list of active aliases, run `alias`.
-#
-# Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
-export NVM_DIR="/Users/dan/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-###-tns-completion-start-###
-if [ -f /Users/dan/.tnsrc ]; then
-    source /Users/dan/.tnsrc
-fi
-###-tns-completion-end-###
-
-# tabtab source for electron-forge package
-# uninstall by removing these lines or running `tabtab uninstall electron-forge`
-[[ -f /Users/dan/code/git/Conquer_Them_All/node_modules/tabtab/.completions/electron-forge.zsh ]] && . /Users/dan/code/git/Conquer_Them_All/node_modules/tabtab/.completions/electron-forge.zsh
-
-export GEM_HOME=~/.gem
-export GEM_PATH=~/.gem
-[ -f "${GHCUP_INSTALL_BASE_PREFIX:=$HOME}/.ghcup/env" ] && source "${GHCUP_INSTALL_BASE_PREFIX:=$HOME}/.ghcup/env"
-
-
-autoload -U promptinit; promptinit
-prompt pure
-
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zshexport PATH="$HOME/.rbenv/bin:$PATH"
-export PATH="$HOME/.rbenv/bin:$PATH"
-eval "$(rbenv init -)"
+export CYPRESS_CRASH_REPORTS=0
