@@ -25,30 +25,7 @@
   "prettier.formatterPriority": 0,
   "prettier.statusItemText": "ⓟ ",
   "prettier.eslintIntegration": true,
-  "eslint.filetypes": ["javascript", "javascript.jsx", "javascriptreact", "typescript", "vue"],
-  "eslint.autoFix": true,
   "eslint.autoFixOnSave": true,
-  "languageserver": {
-    "haskell": {
-      "command": "hie-wrapper",
-      "args": ["--lsp"],
-      "rootPatterns": [
-        "*.cabal",
-        "stack.yaml",
-        "cabal.project",
-        "package.yaml"
-      ],
-      "filetypes": [
-        "hs",
-        "lhs",
-        "haskell"
-      ],
-      "initializationOptions": {
-        "languageServerHaskell": {
-        }
-      }
-    }
-  },
   "vetur.validation.template": false,
   "vetur.useWorkspaceDependencies": true
 }
