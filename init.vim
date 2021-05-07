@@ -1,3 +1,4 @@
+
 "###############################################################################
 "# Neovim config (Dan Jasnowski) ###############################################
 "###############################################################################
@@ -35,10 +36,8 @@ Plug 'andreypopp/vim-colors-plain'
 " Search {{{
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'                                      | " Fuzzy finding plugin
-Plug 'mcchrish/nnn.vim'
 Plug 'francoiscabrol/ranger.vim'
-Plug 'rbgrouleff/bclose.vim'
-Plug 'vifm/vifm.vim'
+Plug 'rbgrouleff/bclose.vim' " Needed with nvim for ranger to work
 " }}
 
 " Navigation {{{
@@ -46,9 +45,7 @@ Plug 'lambdalisue/fern.vim'                                  | " netrw replaceme
 Plug 'ap/vim-buftabline'                                     | " Displays buffers
 Plug 'chaoren/vim-wordmotion'
 Plug 'wellle/targets.vim'
-" Plug 'wfxr/minimap.vim' " NEED TO UPDATE TO neovim 0.5.0
 " }}}
-
 
 " Visual {{{
 Plug 'arecarn/vim-clean-fold'                                | " Provides function for folds
@@ -68,20 +65,15 @@ Plug 'tpope/vim-surround'                                    | " Surround motion
 Plug 'voldikss/vim-floaterm'                                 | " Floating terminal window
 Plug 'liuchengxu/vista.vim'
 Plug 'alvan/vim-closetag'
-" Plug 'craigemery/vim-autotag'
 " }}}
-
 
 " Tools {{{
 Plug 'tpope/vim-obsession'                                   | " Continuously updated session files
 Plug 'dhruvasagar/vim-prosession'                            | " Allows switching between multiple sessions cleanly
 Plug 'airblade/vim-gitgutter'                                | " Show git file diff
-Plug 'wakatime/vim-wakatime'                                 | " Wakatime extension to track coding
-Plug 'duggiefresh/vim-easydir'                               | " Create files in dirs that don't exist
 Plug 'tpope/vim-dadbod'                                      | " DB support
 Plug 'kristijanhusak/vim-dadbod-ui'                          | " DB UI support
 Plug 'tpope/vim-fugitive'                                    | " Git tools
-Plug 'mbbill/undotree'
 " }}}
 
 " Conquer of Completion {{{
@@ -90,15 +82,10 @@ Plug 'neoclide/coc.nvim'                                     | " Completion prov
 
 " Syntax {{{
 Plug 'HerringtonDarkholme/yats.vim'                        | " TypeScript syntax highlighter
-" Plug 'mhartington/nvim-typescript', {'do': ':!install.sh \| UpdateRemotePlugins'} | " Typescrpt
 Plug 'pangloss/vim-javascript'                             | " Syntax highlighting in JavaScript
 Plug 'sheerun/vim-polyglot'                                | " Lang pack
 Plug 'leafOfTree/vim-vue-plugin'                           | " Vue.js
-" Plug 'Shougo/deoplete.nvim'                                | " For async completion
-" Plug 'Shougo/denite.nvim'                                  | " For Denite features
 " }}}
-let g:deoplete#enable_at_startup = 1
-
 
 " End the plugin registration
 call plug#end()
@@ -144,8 +131,6 @@ set tabstop=2      | " Number of spaces a <Tab> is
 set timeoutlen=500 | " Wait less time for mapped sequences
 let g:closetag_filenames = '*.vue,*.tsx,*.html,*.tsx'
 
-" Special formatting for PHP and Blade files
-autocmd Filetype "blade,php,cs" setl shiftwidth=4 softtabstop=4 tabstop=4
 autocmd Filetype "vue" setl foldmethod=syntax
 autocmd BufRead,BufNewFile *.vue setfiletype html
 " Auto source on file save
@@ -176,10 +161,6 @@ set cursorline
 " Mappings / Keybinds {{{
 
 " General {{{
-" Easy align in visual mode
-xmap     ga <Plug>(EasyAlign)
-" Easy align in normal mode
-nmap     ga <Plug>(EasyAlign)
 " Open custom digest for folds
 nnoremap <silent> <Leader>= :call FoldDigest()<CR>
 nnoremap <silent> <Leader>v :FloatermNew --height=0.8 --width=0.8 --wintype=floating --name=gitrepo --autoclose=2 lazygit<CR>
@@ -277,11 +258,8 @@ nnoremap <silent> <Leader>g :call openterm#horizontal('lazygit', 0.8)<CR>
 " }}}
 
 " Search Configuration {{{
-" Default location for FZF
-nnoremap <leader>n :NnnPicker '%:p:h'<CR>
 nnoremap <silent><Leader><space> :nohlsearch<CR>
 let g:ranger_map_keys = 0 
-let g:nnn#layout = { 'window': { 'width': 0.9, 'height': 0.6, 'highlight': 'Debug' } }
 let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
 
 let g:fzf_colors =
@@ -342,16 +320,10 @@ let g:coc_global_extensions = [
   \ 'coc-html',
   \ 'coc-json',
   \ 'coc-lists',
-  \ 'coc-pairs',
-  \ 'coc-phpls',
   \ 'coc-prettier',
-  \ 'coc-sh',
-  \ 'coc-snippets',
-  \ 'coc-stylelint',
-  \ 'coc-tslint',
   \ 'coc-tsserver',
   \ 'coc-vimlsp',
-  \ 'coc-yaml',
+  \ 'coc-vetur'
 \ ]
 " }}}
 
@@ -392,8 +364,8 @@ let g:indent_guides_exclude_filetypes = ['help', 'startify', 'fzf', 'fern']
 " }}}
 
 " Fold Digest {{{
-" let folddigest_options = "nofoldclose,vertical,flexnumwidth"
-" let folddigest_size = 40
+let folddigest_options = "nofoldclose,vertical,flexnumwidth"
+let folddigest_size = 40
 " }}}
 
 " Airline {{{
@@ -441,10 +413,6 @@ let g:floaterm_wintitle=0
 " }}}
 
 " Coc {{{
-" Use `lp` and `ln` for navigate diagnostics
-nmap <silent> <leader>lp <Plug>(coc-diagnostic-prev)
-nmap <silent> <leader>ln <Plug>(coc-diagnostic-next)
-
 " Remap keys for applying codeAction to the current line.
 nmap <leader>ac  <Plug>(coc-codeaction)
 " Apply AutoFix to problem on the current line.
@@ -452,13 +420,6 @@ nmap <leader>qf  <Plug>(coc-fix-current)
 
 " Show autocomplete when Tab is pressed
 inoremap <silent><expr> <Tab> coc#refresh()
-
-" " Remap keys for gotos
-nmap <silent> <leader>ld <Plug>(coc-definition)
-nmap <silent> <leader>lt <Plug>(coc-type-definition)
-nmap <silent> <leader>li <Plug>(coc-implementation)
-nmap <silent> <leader>lf <Plug>(coc-references)
-
 " Use K for show documentation in preview window
 nnoremap <silent> K :call <SID>show_documentation()<CR>
 
