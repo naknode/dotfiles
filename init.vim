@@ -21,6 +21,8 @@ endfunction
 " Begin vim plug
 call plug#begin(expand('~/.config/nvim/plugged'))
 
+Plug 'vim-test/vim-test'
+
 " Defaults {{{
 Plug 'christoomey/vim-tmux-navigator'                        | " Pane navigation
 Plug 'tpope/vim-sensible'                                    | " Sensible defaults
@@ -186,8 +188,10 @@ nnoremap <silent> <Leader>b :Buffers<CR>
 nnoremap <silent> <Leader>w :Windows<CR>
 " Open ripgrep
 nnoremap <silent> <Leader>f :Rg<CR>
-nnoremap <silent> <Leader>r :FloatermNew ranger<CR>
+nnoremap <silent> <Leader>ra :FloatermNew ranger<CR>
 nnoremap <silent> <Leader>F :FloatermNew vifm<CR>
+" Search for next character undor cursor
+nnoremap <silent> <leader>a vy/<C-R>='\V'.escape(getreg('"'),'\\/')<CR><CR>
 " Open ripgrep agriculture for visual selection
 nmap <Leader>/ <Plug>RgRawSearch
 vmap <Leader>/ <Plug>RgRawVisualSelection
@@ -255,6 +259,21 @@ nmap <silent> ]g <Plug>(coc-diagnostic-next)
 nnoremap <silent> <Leader>g :call openterm#horizontal('lazygit', 0.8)<CR>
 " }}}
 
+" Snippets
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? coc#_select_confirm() :
+      \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+let g:coc_snippet_next = '<tab>'
+
+
 " }}}
 
 " Search Configuration {{{
@@ -315,7 +334,6 @@ endfunction
 " Plugins {{{
 let g:coc_global_extensions = [
   \ 'coc-css',
-  \ 'coc-eslint',
   \ 'coc-git',
   \ 'coc-html',
   \ 'coc-json',
@@ -323,7 +341,8 @@ let g:coc_global_extensions = [
   \ 'coc-prettier',
   \ 'coc-tsserver',
   \ 'coc-vimlsp',
-  \ 'coc-vetur'
+  \ 'coc-vetur',
+  \ 'coc-snippets'
 \ ]
 " }}}
 
@@ -337,6 +356,9 @@ set shortmess+=c
 " You will have bad experience for diagnostic messages when it's default 4000.
 set updatetime=100
 " }}}
+
+" Prettier
+command! -nargs=0 Prettier :CocCommand prettier.formatFile
 
 " Use tab for trigger completion
 inoremap <silent><expr> <TAB>
@@ -417,9 +439,11 @@ let g:floaterm_wintitle=0
 nmap <leader>ac  <Plug>(coc-codeaction)
 " Apply AutoFix to problem on the current line.
 nmap <leader>qf  <Plug>(coc-fix-current)
+" Rename symbol
+nmap <leader>rn <Plug>(coc-rename)
 
 " Show autocomplete when Tab is pressed
-inoremap <silent><expr> <Tab> coc#refresh()
+" inoremap <silent><expr> <Tab> coc#refresh()
 " Use K for show documentation in preview window
 nnoremap <silent> K :call <SID>show_documentation()<CR>
 
